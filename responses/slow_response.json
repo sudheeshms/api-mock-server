@@ -1,0 +1,9 @@
+{
+  "status": "success",
+  "message": "This response was intentionally delayed",
+  "data": {
+    "processing_time": "2 seconds",
+    "result": "Slow operation completed"
+  }
+}
+

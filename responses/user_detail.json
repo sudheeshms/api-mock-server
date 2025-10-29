@@ -1,0 +1,22 @@
+{
+  "status": "success",
+  "data": {
+    "id": 123,
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "role": "admin",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-10-28T14:20:00Z",
+    "profile": {
+      "bio": "Software Engineer with 10+ years of experience",
+      "location": "Tokyo, Japan",
+      "website": "https://johndoe.com"
+    },
+    "preferences": {
+      "notifications": true,
+      "language": "en",
+      "timezone": "Asia/Tokyo"
+    }
+  }
+}
+

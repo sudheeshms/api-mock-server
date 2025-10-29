@@ -1,0 +1,10 @@
+{
+  "status": "success",
+  "message": "Product created successfully",
+  "data": {
+    "id": "PROD-004",
+    "name": "New Product",
+    "created_at": "2025-10-29T10:30:00Z"
+  }
+}
+

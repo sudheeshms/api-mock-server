@@ -1,0 +1,49 @@
+# API Mock Server Configuration
+# Define your endpoints and their corresponding response files here
+
+endpoints:
+  # Example 1: Simple GET endpoint
+  /api/v1/users:
+    methods: ['GET']
+    description: "Get list of users"
+    response_file: "users_list.json"
+    status_code: 200
+  
+  # Example 2: Single resource endpoint
+  /api/v1/users/123:
+    methods: ['GET']
+    description: "Get user by ID"
+    response_file: "user_detail.json"
+    status_code: 200
+  
+  # Example 3: Multiple methods with different responses
+  /api/v1/products:
+    methods: ['GET', 'POST']
+    description: "Products endpoint supporting GET and POST"
+    responses:
+      GET: "products_list.json"
+      POST: "product_created.json"
+    status_code: 200
+  
+  # Example 4: Error response simulation
+  /api/v1/error:
+    methods: ['GET']
+    description: "Simulate error response"
+    response_file: "error_response.json"
+    status_code: 400
+  
+  # Example 5: Endpoint with simulated delay (in seconds)
+  /api/v1/slow:
+    methods: ['GET']
+    description: "Simulate slow response"
+    response_file: "slow_response.json"
+    status_code: 200
+    delay: 2
+
+# Add your own endpoints below:
+# /your/endpoint/path:
+#   methods: ['GET', 'POST', ...]
+#   description: "Your endpoint description"
+#   response_file: "your_response.json"
+#   status_code: 200
+
