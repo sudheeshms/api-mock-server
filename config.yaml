@@ -40,7 +40,150 @@ endpoints:
     status_code: 200
     delay: 2
 
-# Add your own endpoints below:
+# =============================================================================
+# FREE LINK API - RAFL (Rakuten Affiliate Free Link API)
+# =============================================================================
+  
+  # SUCCESS SCENARIOS
+  # -----------------
+  
+  # Success: Item URL without pb_id
+  /freelink/v1/success/item:
+    methods: ['POST']
+    description: "Free Link API - Success response for item URL"
+    response_file: "freelink_success_item.json"
+    status_code: 200
+  
+  # Success: Item URL with pb_id
+  /freelink/v1/success/item-with-pbid:
+    methods: ['POST']
+    description: "Free Link API - Success response for item URL with pb_id"
+    response_file: "freelink_success_item_with_pbid.json"
+    status_code: 200
+  
+  # Success: Shop URL
+  /freelink/v1/success/shop:
+    methods: ['POST']
+    description: "Free Link API - Success response for shop URL"
+    response_file: "freelink_success_shop.json"
+    status_code: 200
+  
+  # Success: Deeplink (210 prefix shop)
+  /freelink/v1/success/deeplink:
+    methods: ['POST']
+    description: "Free Link API - Success response with deeplink for 210 prefix shop"
+    response_file: "freelink_success_deeplink.json"
+    status_code: 200
+  
+  # ERROR SCENARIOS - Validation Errors
+  # ------------------------------------
+  
+  # Error: Key missing
+  /freelink/v1/error/key-missing:
+    methods: ['POST']
+    description: "Free Link API - Error: key parameter missing"
+    response_file: "freelink_error_key_missing.json"
+    status_code: 400
+  
+  # Error: Key invalid (authentication failed)
+  /freelink/v1/error/key-invalid:
+    methods: ['POST']
+    description: "Free Link API - Error: key authentication error"
+    response_file: "freelink_error_key_invalid.json"
+    status_code: 400
+  
+  # Error: affiliate_id missing
+  /freelink/v1/error/affiliate-id-missing:
+    methods: ['POST']
+    description: "Free Link API - Error: affiliate_id parameter missing"
+    response_file: "freelink_error_affiliate_id_missing.json"
+    status_code: 400
+  
+  # Error: affiliate_id format error
+  /freelink/v1/error/affiliate-id-format:
+    methods: ['POST']
+    description: "Free Link API - Error: affiliate_id format is invalid"
+    response_file: "freelink_error_affiliate_id_format.json"
+    status_code: 400
+  
+  # Error: affiliate_id discrepancy
+  /freelink/v1/error/affiliate-id-discrepancy:
+    methods: ['POST']
+    description: "Free Link API - Error: affiliate_id discrepancy with af_id"
+    response_file: "freelink_error_affiliate_id_discrepancy.json"
+    status_code: 400
+  
+  # Error: af_id missing
+  /freelink/v1/error/afid-missing:
+    methods: ['POST']
+    description: "Free Link API - Error: af_id parameter missing"
+    response_file: "freelink_error_afid_missing.json"
+    status_code: 400
+  
+  # Error: af_id does not exist
+  /freelink/v1/error/afid-not-exist:
+    methods: ['POST']
+    description: "Free Link API - Error: af_id does not exist in database"
+    response_file: "freelink_error_afid_not_exist.json"
+    status_code: 400
+  
+  # Error: af_id status not ok
+  /freelink/v1/error/afid-status:
+    methods: ['POST']
+    description: "Free Link API - Error: af_id status is not ok"
+    response_file: "freelink_error_afid_status.json"
+    status_code: 400
+  
+  # Error: af_id blacklisted
+  /freelink/v1/error/afid-blacklisted:
+    methods: ['POST']
+    description: "Free Link API - Error: af_id is blacklisted"
+    response_file: "freelink_error_afid_blacklisted.json"
+    status_code: 400
+  
+  # Error: URL missing
+  /freelink/v1/error/url-missing:
+    methods: ['POST']
+    description: "Free Link API - Error: url parameter missing"
+    response_file: "freelink_error_url_missing.json"
+    status_code: 400
+  
+  # Error: URL format error
+  /freelink/v1/error/url-format:
+    methods: ['POST']
+    description: "Free Link API - Error: url format is invalid"
+    response_file: "freelink_error_url_format.json"
+    status_code: 400
+  
+  # Error: URL denied (blocked URL)
+  /freelink/v1/error/url-denied:
+    methods: ['POST']
+    description: "Free Link API - Error: url is in denied list"
+    response_file: "freelink_error_url_denied.json"
+    status_code: 400
+  
+  # Error: pb_id format error
+  /freelink/v1/error/pbid-format:
+    methods: ['POST']
+    description: "Free Link API - Error: pb_id format is invalid"
+    response_file: "freelink_error_pbid_format.json"
+    status_code: 400
+  
+  # Error: shop_id does not exist
+  /freelink/v1/error/shop-not-exist:
+    methods: ['POST']
+    description: "Free Link API - Error: shop_id does not exist"
+    response_file: "freelink_error_shop_not_exist.json"
+    status_code: 400
+  
+  # Error: System error (500)
+  /freelink/v1/error/system:
+    methods: ['POST']
+    description: "Free Link API - Error: Internal system error"
+    response_file: "freelink_error_system.json"
+    status_code: 500
+
+# Add your own custom endpoints below:
 # /your/endpoint/path:
 #   methods: ['GET', 'POST', ...]
 #   description: "Your endpoint description"

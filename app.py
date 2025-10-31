@@ -64,6 +64,39 @@ def list_endpoints():
         "endpoints": endpoints
     })
 
+@app.route('/freelink/v1/authentication', methods=['POST'])
+def freelink_authentication():
+    expected_headers = {
+        'Content-Type': 'application/json',
+        'applicationId': 'sample_app_Id',
+        'accessKey': 'sample_access_key'
+    }
+    data = request.get_json(silent=True)
+    # Check headers (header names are case-insensitive in Flask)
+    def header_equals(h, v):
+        return request.headers.get(h) == v
+
+    # Validate headers
+    valid_headers = (
+        header_equals('Content-Type', expected_headers['Content-Type']) and
+        header_equals('applicationId', expected_headers['applicationId']) and
+        header_equals('accessKey', expected_headers['accessKey'])
+    )
+    
+    # Validate JSON body
+    valid_json = data and all(k in data for k in ('affiliateId', 'url'))
+    
+    if valid_headers and valid_json:
+        return jsonify({
+            'status': 'success',
+            'message': 'Authentication successful',
+        }), 200
+    else:
+        return jsonify({
+            'status': 'error',
+            'message': 'Invalid authentication request. Check headers and request body.'
+        }), 400
+
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
 def handle_request(path):
     """Handle all configured endpoint requests"""
@@ -171,4 +204,7 @@ if __name__ == '__main__':
         port=5000,
         debug=True
     )
+
+
+
 
