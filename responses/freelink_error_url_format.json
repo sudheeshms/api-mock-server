@@ -1,7 +1,7 @@
 {
   "status": "Error",
   "error_code": 1003,
-  "error_message": "url format error"
+  "error_message": "Invalid URL – Not Allowed"
 }
 
 

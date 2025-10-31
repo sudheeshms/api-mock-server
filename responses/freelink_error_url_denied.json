@@ -1,7 +1,7 @@
 {
   "status": "Error",
   "error_code": 1002,
-  "error_message": "url is wrong"
+  "error_message": "Invalid URL – Data Not found"
 }
 
 

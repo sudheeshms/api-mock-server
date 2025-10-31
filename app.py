@@ -19,6 +19,12 @@ CORS(app)  # Enable CORS for external access
 CONFIG_FILE = 'config.yaml'
 RESPONSES_DIR = 'responses'
 
+def error_response(error_code, description, status=400):
+    return jsonify({
+        "error_code": error_code,
+        "message": description
+    }), status
+
 def load_config():
     """Load endpoint configuration from YAML file"""
     config_path = Path(CONFIG_FILE)
@@ -64,113 +70,85 @@ def list_endpoints():
         "endpoints": endpoints
     })
 
-@app.route('/freelink/v1/authentication', methods=['POST'])
-def freelink_authentication():
+def validate_authentication(req):
+    """Validate authentication headers and JSON body"""
     expected_headers = {
         'Content-Type': 'application/json',
         'applicationId': 'sample_app_Id',
         'accessKey': 'sample_access_key'
     }
-    data = request.get_json(silent=True)
-    # Check headers (header names are case-insensitive in Flask)
+    data = req.get_json(silent=True)
     def header_equals(h, v):
-        return request.headers.get(h) == v
+        return req.headers.get(h) == v
+    if not header_equals('Content-Type', expected_headers['Content-Type']) or \
+       not header_equals('applicationId', expected_headers['applicationId']) or \
+       not header_equals('accessKey', expected_headers['accessKey']):
+        return error_response(1010, "Invalid Key", 400)
+    if not data:
+        return error_response(1001, "Missing required field", 400)
+    has_affiliate_id = 'affiliateId' in data
+    has_url = 'url' in data
+    if not (has_affiliate_id and has_url):
+        return error_response(1001, "Missing required field", 400)
+    return None
 
-    # Validate headers
-    valid_headers = (
-        header_equals('Content-Type', expected_headers['Content-Type']) and
-        header_equals('applicationId', expected_headers['applicationId']) and
-        header_equals('accessKey', expected_headers['accessKey'])
-    )
-    
-    # Validate JSON body
-    valid_json = data and all(k in data for k in ('affiliateId', 'url'))
-    
-    if valid_headers and valid_json:
-        return jsonify({
-            'status': 'success',
-            'message': 'Authentication successful',
-        }), 200
-    else:
-        return jsonify({
-            'status': 'error',
-            'message': 'Invalid authentication request. Check headers and request body.'
-        }), 400
 
 @app.route('/<path:path>', methods=['GET', 'POST', 'PUT', 'DELETE', 'PATCH'])
 def handle_request(path):
     """Handle all configured endpoint requests"""
     config = load_config()
     endpoints = config.get('endpoints', {})
-    
+
     # Normalize path
     request_path = f"/{path}"
-    
+
     # Check if endpoint is configured
     if request_path not in endpoints:
-        return jsonify({
-            "error": "Endpoint not configured",
-            "path": request_path,
-            "message": f"No mock response configured for {request_path}",
-            "hint": "Check config.yaml or use /endpoints to see available endpoints"
-        }), 404
-    
+        return error_response(1001, "Missing required field", 404)
+
+    # Validate authentication for all endpoints
+    auth_error = validate_authentication(request)
+    if auth_error:
+        return auth_error
+
     endpoint_config = endpoints[request_path]
-    
+
     # Check if method is allowed
     allowed_methods = endpoint_config.get('methods', ['GET'])
     if request.method not in allowed_methods:
-        return jsonify({
-            "error": "Method not allowed",
-            "allowed_methods": allowed_methods
-        }), 405
-    
+        return error_response(1001, "Missing required field", 405)
+
     # Get response file based on method or use default
     response_mapping = endpoint_config.get('responses', {})
     response_file = response_mapping.get(request.method) or endpoint_config.get('response_file')
-    
+
     if not response_file:
-        return jsonify({
-            "error": "No response file configured",
-            "path": request_path,
-            "method": request.method
-        }), 500
-    
+        return error_response(5001, "Service Not Available Temporarily", 500)
+
     # Load and return response
     response_data = load_json_response(response_file)
-    
+
     if response_data is None:
-        return jsonify({
-            "error": "Response file not found",
-            "file": response_file,
-            "path": f"{RESPONSES_DIR}/{response_file}"
-        }), 500
-    
+        return error_response(5002, "Internal server error", 500)
+
     # Get status code (default 200)
     status_code = endpoint_config.get('status_code', 200)
-    
+
     # Optional delay simulation (in seconds)
     delay = endpoint_config.get('delay', 0)
     if delay > 0:
         import time
         time.sleep(delay)
-    
+
     return jsonify(response_data), status_code
 
 @app.errorhandler(404)
 def not_found(e):
-    return jsonify({
-        "error": "Not found",
-        "message": "Endpoint not configured",
-        "hint": "Use /endpoints to see all available endpoints"
-    }), 404
+    return error_response(1001, "Missing required field", 404)
 
 @app.errorhandler(500)
 def internal_error(e):
-    return jsonify({
-        "error": "Internal server error",
-        "message": str(e)
-    }), 500
+    return error_response(5002, "Internal server error", 500)
 
 if __name__ == '__main__':
     # Create responses directory if it doesn't exist

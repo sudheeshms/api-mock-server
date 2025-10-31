@@ -1,7 +1,7 @@
 {
   "status": "Error",
   "error_code": 1007,
-  "error_message": "af_id status is not ok"
+  "error_message": "Invalid Affiliate ID – Inactive"
 }
 
 

@@ -1,7 +1,7 @@
 {
   "status": "Error",
   "error_code": 1005,
-  "error_message": "pb_id format error"
+  "error_message": "Invalid PB ID"
 }
 
 
